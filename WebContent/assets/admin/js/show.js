@@ -2,6 +2,26 @@ $(document).ready(function(){
 
 });
 
+
+
+// Publish functions
+function publishSearch(){
+    $('#pubilsh-search-dlg').dialog('open').dialog('center');
+}
+
+function publishDelete(){
+    var row = $('#publish').datagrid('getSelected');
+    if(row){
+        $.messager.confirm('删除文章','你确认删除该文章？'+row.id,function(r){
+            if (r){
+                alert('ok');
+            }
+        });
+    }
+}
+
+
+//-----------------------------------------------------------------------------------
 var url;
 
 function normalCheck(){
