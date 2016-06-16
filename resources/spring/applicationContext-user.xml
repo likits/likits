@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- 前台 -->
+	<bean id="registerAndLoginAction" class="com.likits.action.front.RegisterAndLoginAction">
+		<property name="userService" ref="userService"></property>
+		<property name="emailSenderUser" value="${emailSender_user}"></property>
+		<property name="emailSenderPassword" value="${emailSender_password}"></property>
+		<property name="emailSenderHost" value="${emailSender_hostName}"></property>
+	</bean>
+	
+	<bean id="userService" class="com.likits.service.front.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	
+	<bean id="exhibitionAction" class="com.likits.action.front.ExhibitionAction" scope="prototype">
+		<property name="recommendService" ref="recommendService"></property>
+		<property name="articleService" ref="articleService"></property>		
+	</bean>
+	
+	<bean id="recommendService" class="com.likits.service.front.impl.RecommendServiceImpl">
+		<property name="articleDao" ref="articleDao"></property>
+	</bean>
+	
+	<bean id="articleService" class="com.likits.service.front.impl.ArticleServiceImpl">
+		<property name="articleDao" ref="articleDao"></property>
+	</bean>
+	
+
+	
+	<!-- 后台管理系统  -->
+	<bean id="adminLoginAction" class="com.likits.action.admin.LoginAction">
+		<property name="userService" ref="adminUserService"></property>
+	</bean>
+	
+	<bean id="adminUserService" class="com.likits.service.admin.impl.UserServiceImpl">
+		<property name="userDao" ref="adminUserDao"></property>
+	</bean>
+	    
+</beans>
