@@ -1,6 +1,10 @@
 package com.likits.service.admin;
 
+import com.likits.entity.front.Article;
+
 public interface ShowService
 {
-    String findAllShows(int page,int rows);
+    void update(Article article);
+    
+    String findAllShows(int page,int rows,int stateId);
 }

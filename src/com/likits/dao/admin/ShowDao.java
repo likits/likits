@@ -7,5 +7,5 @@ import com.likits.entity.front.Article;
 
 public interface ShowDao extends Dao<Article, Integer>
 {
-    List<Article> findArticles(int page,int rows);
+    List<Article> findArticles(int page,int rows, int stateId);
 }

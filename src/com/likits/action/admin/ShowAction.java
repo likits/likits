@@ -5,10 +5,13 @@ import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+
 import com.likits.entity.front.Article;
 import com.likits.service.admin.ShowService;
 import com.likits.util.BaseAction;
 import com.opensymphony.xwork2.ModelDriven;
+
+import net.sf.json.JSONObject;
 
 @Controller("showAction")
 @Scope("prototype")
@@ -23,11 +26,41 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
 
     private int page;
     private int rows;
+    
+    private static JSONObject successMsg;
+    private static JSONObject errorMsg;
+
+    static
+    {
+        successMsg = new JSONObject();
+        successMsg.put("status", true);
+        errorMsg = new JSONObject();
+        errorMsg.put("status", false);
+    }
 
     public void findAllArticles()
-    {
-        String json = showService.findAllShows(page, rows);
-        this.toResponse(json);
+    {        
+        try
+        {
+            String json = showService.findAllShows(page, rows,article.getStateId());
+            this.toResponse(json);            
+        } catch (Exception e)
+        {
+            this.toResponse(errorMsg.toString());
+            e.printStackTrace();            
+        }
+    }
+    
+    public void update(){
+        try
+        {
+            showService.update(article);
+            this.toResponse(successMsg.toString());
+        } catch (Exception e)
+        {
+            this.toResponse(errorMsg.toString());
+            e.printStackTrace();
+        }        
     }
 
     public int getPage()

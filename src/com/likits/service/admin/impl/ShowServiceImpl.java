@@ -1,5 +1,6 @@
 package com.likits.service.admin.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -23,24 +24,31 @@ public class ShowServiceImpl implements ShowService
     @Qualifier("showDao")
     ShowDao showDao;
 
-    public String findAllShows(int page, int rows)
+    public String findAllShows(int page, int rows, int stateId)
     {
-        List<Article> articles = showDao.findArticles(page, rows);
+        List<Article> articles = showDao.findArticles(page, rows, stateId);
         int total = articles.size();
         JSONArray ja = new JSONArray();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (int i = 0; i < articles.size(); i++)
         {
             Article article = articles.get(i);
             JSONObject jo = new JSONObject();
             jo.put("id", article.getId());
             jo.put("title", article.getTitle());
-            jo.put("publishTime", article.getPublishTime());
+            jo.put("publishTime", simpleDateFormat.format(article.getPublishTime()));
             jo.put("content", article.getContent());
             jo.put("coverImage", article.getCoverImage());
+            jo.put("stateId", article.getStateId());
             ja.add(jo);
         }
         String json = ja.toString();
         json = "{\"total\":\"" + total + "\",\"rows\":" + json + "}";
         return json;
+    }
+
+    public void update(Article article)
+    {
+        showDao.update(article);        
     }
 }

@@ -14,11 +14,12 @@ import com.likits.entity.front.Article;
 public class ShowDaoImpl extends BaseDao<Article, Integer> implements ShowDao
 {
     
-    public List<Article> findArticles(int page, int rows)
+    public List<Article> findArticles(int page, int rows,int stateId)
     {
         Session session = this.getSessionFactory().getCurrentSession();
-        String hql = "from Article";
+        String hql = "from Article as a where a.stateId=?";
         Query query = session.createQuery(hql);
+        query.setParameter(0, stateId);        
         query.setFirstResult((page-1)*rows);
         query.setMaxResults(rows);
         @SuppressWarnings("unchecked")
