@@ -11,4 +11,7 @@
          <value>classpath:conf/environment.properties</value>
       </property>
    </bean>
+   
+    <context:component-scan base-package="com.likits" />
+    
 </beans>

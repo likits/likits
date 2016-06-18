@@ -19,4 +19,8 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 	
+	<bean id="showDao" class="com.likits.dao.admin.impl.ShowDaoImpl">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
 </beans>
