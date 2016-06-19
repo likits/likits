@@ -3,32 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Show</title>
+    <link href="../assets/admin/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../assets/admin/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="../assets/admin/themes/icon.css">
     <link rel="stylesheet" href="../assets/admin/css/show.css"/>
+
 </head>
 <body>
-<div id="tabsMenu" class="easyui-tabs" data-options="border:false">
+<div class="easyui-tabs" data-options="border:false">
 
     <div title="待审核">
 
-        <table id="check" class="easyui-datagrid" style="width: 100%; height: 100% ; max-height: 800px"
-               url="data.json"
+        <table id="check" class="easyui-datagrid" style="width: 100%; height: 700px ;"
+               url="showAction_findAllArticles.action?stateId=1"
                toolbar="#check-toolbar" pagination="true"
                rownumbers="true" fitColumns="true" singleSelect="false">
             <thead>
             <tr>
                 <th data-options="field:'ck',checkbox:true"></th>
                 <th field="id" width="2">ID</th>
-                <th field="title" width="2">标题</th>
-                <th field="category" width="2">类别</th>
+                <th field="title" width="5">标题</th>
                 <th field="publishTime" width="3">发布时间</th>
                 <th field="content" width="5">内容</th>
-                <th field="reader" width="2">阅读数</th>
+                <th field="readCounter" width="2">阅读数</th>
                 <th field="starCounter" width="2">点赞数</th>
-                <th field="user" width="3">发布者</th>
-                <th field="tag" width="3">标签</th>
+                <th field="forwardCounter" width="2">转发数</th>
+                <th field="user" width="2">发布者</th>
+                <th field="tag" width="2">标签</th>
                 <th field="coverImage" width="2">封面图片</th>
+                <th field="category" width="2">发布内容类型</th>
+                <th field="infoOrArticleTags" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="stateId" width="2">文章状态</th>
             </tr>
             </thead>
         </table>
@@ -38,67 +44,468 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="multipleCheck()">批量审核</a>
         </div>
 
-        <div id="check-dlg" class="easyui-dialog" style="padding:10px 20px"
+        <div id="check-dlg" class="easyui-dialog" style="padding:10px 20px; height: 500px"
              closed="true" buttons="#check-dlg-buttons" modal="true">
             <div class="ftitle">文章信息</div>
-            <form id="fm" method="post" novalidate>
-                <div class="fitem">
-                    <label>ID：</label>
-                    <input name="id" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>标题：</label>
-                    <input name="title" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>类别：</label>
-                    <input name="category" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>发布时间：</label>
-                    <input name="pubilshTime" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>内容：</label>
-                    <input name="content" class="easyui-textbox" data-options="multiline:true" style="height:60px" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>阅读数：</label>
-                    <input name="reader" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>点赞数：</label>
-                    <input name="starCounter" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>发布者：</label>
-                    <input name="user" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>标签：</label>
-                    <input name="tag" class="easyui-textbox" editable="false">
-                </div>
-                <div class="fitem">
-                    <label>封面图片：</label>
-                    <input name="coverImage" class="easyui-textbox" editable="false">
+            <form id="check-form" class="fm" method="post" novalidate>
+                <div class="container" style="width: 650px;">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>文章状态：</label>
+                                <select	class="easyui-combobox" name="stateId" id="check-combobox" editable="false" panelHeight="50">
+										<option value="1">待审核</option>
+										<option value="2">待推送</option>
+									</select>
+								</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>ID：</label>
+                                <input name="id" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标题：</label>
+                                <input name="title" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="fitem">
+                                    <label>发布时间：</label>
+                                    <input name="publishTime" class="easyui-textbox" editable="false">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="fitem">
+                                <label>内容：</label>
+                                <input name="content" class="easyui-textbox" data-options="multiline:true" style="height:200px;width: 100%" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>阅读数：</label>
+                                <input name="readCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>点赞数：</label>
+                                <input name="starCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>转发数：</label>
+                                <input name="forwardCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>发布者：</label>
+                                <input name="user" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标签：</label>
+                                <input name="tag" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>封面图片：</label>
+                                <input name="coverImage" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>内容类型：</label>
+                                <input name="category" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯类型：</label>
+                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯子类型：</label>
+                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
 
         <div id="check-dlg-buttons">
-            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">审核通过</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#check-dlg').dialog('close')" style="width:90px">审核不通过</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="checkPass()" style="width:90px">确认</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#check-dlg').dialog('close')" style="width:90px">取消</a>
         </div>
 
     </div>
 
     <div title="待推送">
-        <table id="push"></table>
+
+        <table id="push" class="easyui-datagrid" style="width: 100%; height: 700px ;"
+               url="showAction_findAllArticles.action?stateId=2"
+               toolbar="#push-toolbar" pagination="true"
+               rownumbers="true" fitColumns="true" singleSelect="false">
+            <thead>
+            <tr>
+                <th data-options="field:'ck',checkbox:true"></th>
+                <th field="id" width="2">ID</th>
+                <th field="title" width="5">标题</th>
+                <th field="publishTime" width="3">发布时间</th>
+                <th field="content" width="5">内容</th>
+                <th field="readCounter" width="2">阅读数</th>
+                <th field="starCounter" width="2">点赞数</th>
+                <th field="forwardCounter" width="2">转发数</th>
+                <th field="user" width="2">发布者</th>
+                <th field="tag" width="2">标签</th>
+                <th field="coverImage" width="2">封面图片</th>
+                <th field="category" width="2">发布内容类型</th>
+                <th field="infoOrArticleTags" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="stateId" width="2">文章状态</th>
+            </tr>
+            </thead>
+        </table>
+
+        <div id="push-toolbar">
+            <a id="normalPush" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="normalPush()">普通推送</a>
+            <a id="mutiplePush" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="mutiplePush()">批量推送</a>
+            <input id="autoButton" class="easyui-switchbutton" data-options="onText:'Yes',offText:'No',handleText:'自动推送',handleWidth:'70'" style="width: 100px">
+            <select id="autoTime" class="easyui-combobox" name="autoTime" style="width:100px;" data-options="editable:false">
+                <option value="1">1分钟</option>
+                <option value="5">5分钟</option>
+                <option value="20">20分钟</option>
+                <option value="60">60分钟</option>
+                <option value="120">2小时</option>
+                <option value="240">4小时</option>
+                <option value="360">6小时</option>
+                <option value="720">12小时</option>
+                <option value="1440">24小时</option>
+            </select>
+        </div>
+
+        <div id="push-dlg" class="easyui-dialog" style="padding:10px 20px; height: 500px"
+             closed="true" buttons="#push-dlg-buttons" modal="true">
+            <div class="ftitle">文章信息</div>
+            <form id="push-form" class="fm" method="post" novalidate>
+                <div class="container" style="width: 650px;">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>文章状态：</label>
+                                <select	class="easyui-combobox" name="stateId" id="push-combobox" editable="false" panelHeight="50">
+										<option value="2">待推送</option>
+										<option value="3">已推送</option>
+									</select>
+								</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>ID：</label>
+                                <input name="id" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标题：</label>
+                                <input name="title" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="fitem">
+                                    <label>发布时间：</label>
+                                    <input name="publishTime" class="easyui-textbox" editable="false">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="fitem">
+                                <label>内容：</label>
+                                <input name="content" class="easyui-textbox" data-options="multiline:true" style="height:200px;width: 100%" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>阅读数：</label>
+                                <input name="readCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>点赞数：</label>
+                                <input name="starCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>转发数：</label>
+                                <input name="forwardCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>发布者：</label>
+                                <input name="user" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标签：</label>
+                                <input name="tag" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>封面图片：</label>
+                                <input name="coverImage" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>内容类型：</label>
+                                <input name="category" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯类型：</label>
+                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯子类型：</label>
+                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="push-dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="pushPass()" style="width:90px">确认</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#push-dlg').dialog('close')" style="width:90px">取消</a>
+        </div>
+
     </div>
 
     <div title="已推送">
-        <table id="pushed"></table>
+        <table id="publish" class="easyui-datagrid" style="width: 100%; height: 700px ;"
+               url="showAction_findAllArticles.action?stateId=3"
+               toolbar="#publish-toolbar" pagination="true"
+               rownumbers="true" fitColumns="true" singleSelect="false">
+            <thead>
+            <tr>
+                <th data-options="field:'ck',checkbox:true"></th>
+                <th field="id" width="2">ID</th>
+                <th field="title" width="5">标题</th>
+                <th field="publishTime" width="3">发布时间</th>
+                <th field="content" width="5">内容</th>
+                <th field="readCounter" width="2">阅读数</th>
+                <th field="starCounter" width="2">点赞数</th>
+                <th field="forwardCounter" width="2">转发数</th>
+                <th field="user" width="2">发布者</th>
+                <th field="tag" width="2">标签</th>
+                <th field="coverImage" width="2">封面图片</th>
+                <th field="category" width="2">发布内容类型</th>
+                <th field="infoOrArticleTags" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="stateId" width="2">文章状态</th>
+            </tr>
+            </thead>
+        </table>
+
+        <div id="publish-toolbar">
+        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="publishDown()">普通下架文章</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="publishMultiDown()">批量下架文章</a>
+        </div>
+
+        <div id="pubilsh-search-dlg" class="easyui-dialog" style="padding:10px 20px;width: 200px height: 500px"
+             closed="true" buttons="#publish-search-dlg-buttons" modal="true" title="查询文章信息">
+            <div class="ftitle">输入文章信息</div>
+            <form class="fm" method="post" novalidate>
+                <div class="fitem">
+                    <label>文章标题：</label>
+                    <input name="state" class="easyui-textbox" editable="false">
+                </div>
+            </form>
+        </div>
+
+        <div id="publish-search-dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="publishSearch()" style="width:90px">确认</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#check-dlg').dialog('close')" style="width:90px">取消</a>
+        </div>
+
+        <div id="publish-dlg" class="easyui-dialog" style="padding:10px 20px; height: 500px"
+             closed="true" buttons="#publish-dlg-buttons" modal="true">
+            <div class="ftitle">文章信息</div>
+            <form class="fm" method="post" novalidate>
+                <div class="container" style="width: 650px;">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>文章状态：</label>
+                                <input name="state" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>ID：</label>
+                                <input name="id" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标题：</label>
+                                <input name="title" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="fitem">
+                                    <label>发布时间：</label>
+                                    <input name="publishTime" class="easyui-textbox" editable="false">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="fitem">
+                                <label>内容：</label>
+                                <input name="content" class="easyui-textbox" data-options="multiline:true" style="height:200px;width: 100%" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>阅读数：</label>
+                                <input name="readCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>点赞数：</label>
+                                <input name="starCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>转发数：</label>
+                                <input name="forwardCounter" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>发布者：</label>
+                                <input name="user" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>标签：</label>
+                                <input name="tag" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>封面图片：</label>
+                                <input name="coverImage" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>内容类型：</label>
+                                <input name="category" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯类型：</label>
+                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fitem">
+                                <label>资讯子类型：</label>
+                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="publish-dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:$('#check-dlg').dialog('close')" style="width:90px">取消</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="publishDelete()" style="width:90px">删除</a>
+        </div>
     </div>
+
 </div>
 </body>
 
@@ -106,4 +513,5 @@
 <script type="text/javascript" src="../assets/admin/js/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../assets/admin/js/show.js"></script>
 <script type="text/javascript" src="../assets/admin/js/easyui-lang-zh_CN.js"></script>
+<script src="../assets/admin/js/bootstrap.min.js"></script>
 </html>

@@ -40,4 +40,10 @@
         
 	</package>
 	
+	<package name="admin" namespace="/admin" extends="default">
+		<action name="showAction_*" class="showAction" method="{1}">
+			<result>/dashboard.html</result>
+		</action>
+	</package>
+	
 </struts>
