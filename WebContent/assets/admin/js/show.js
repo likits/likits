@@ -189,3 +189,60 @@ function pushPass(){
 		});
 	}
 }
+
+//已推送
+
+var publish_url = "showAction_update.action?";
+
+function publishDown(){
+	var row = $('#publish').datagrid('getSelected');
+    if (row){
+        $('#publish-dlg').dialog('open').dialog('center').dialog('setTitle','待下架');
+        $('#publish-form').form('load',row);
+    }
+}
+
+function publishMultiDown(){
+	var rows = $('#publish').datagrid('getSelections');
+    var dataSize = rows.length;
+    if (dataSize>0){
+    	$.messager.confirm('批量推送','确认批量推送文章 ：'+dataSize,function(r){
+    	    if (r){
+    	    	for(var i = 0; i<rows.length ; i++){
+    	        	var title = rows[i].title;
+    	        	$.post(publish_url, rows[i],
+    	        			  function(result){
+    			        		if(result.status){
+    				        		$.messager.alert('成功','数据更新成功！'+title,'info');			        		
+    				        	}else{
+    				        		$.messager.alert('失败','数据更新失败！'+title,'error');
+    				        	}
+    	        			 }, "json");
+    	        }
+    	    	$('#publish').datagrid('reload');
+    	    }
+    	});    
+    }else{
+    	$.messager.alert('警告','未选中文章！','info');
+    }
+}
+
+function publishPass(){
+	var row = $('#publish').datagrid('getSelected');	
+	var status = $('#publish-combobox').combobox('getText');
+	var status_value = $('#publish-combobox').combobox('getValue');
+	if (row) {
+		$.messager.confirm('确认', '确认更改文章状态为 : '+status+'?', function(r) {
+			if(r){
+				//The value is changed.
+				if (status_value == 3) {
+					$.messager.alert('警告','文章状态没有改变。','warning');
+				}else{
+					submitForm('#push-form',push_url);		
+					$('#publish-dlg').dialog('close');
+				}								
+			}			
+			
+		});
+	}
+}
