@@ -4,9 +4,21 @@ $(document).ready(function(){
 	//Listen the auto push button
 	$('#autoButton').switchbutton({
 		onChange:function(checked){			
-			//自动推送
-			isAutoPush(checked);				
+			//开启自动推送
+			if(checked){
+				sendAutoPushStatus();
+			}else{
+				cancelAutoPushStatus();
+			}		
 		}
+	});
+	
+	$('#menu-tabs').tabs({
+	    onSelect:function(title,index){
+	    	if(index == 1){
+	    		getAutoPushStatus();
+	    	}
+	    }
 	});
 	
 });
@@ -125,50 +137,86 @@ function mutiplePush(){
     }
 }
 
-function autoPush(){
-	$('#push').datagrid({
-		
+
+//Get server push status
+function getAutoPushStatus(){
+	$.getJSON("showAction_getAutoPushState.action?", function(data){
+		  setAutoPushStatus(data.autoTime,data.switchAutoTime);
 	});
 }
 
-//Set the clock process
-var timeClockProcess;
-
-function isAutoPush(checked){
-	
-	if(checked){
-		var text = $('#autoTime').combobox('getText');
-		var time = $('#autoTime').combobox('getValue');
-		var seconds = time*60*1000;
-		timeClockProcess = setInterval('autoPush()',seconds);
-		
+function setAutoPushStatus(autoTime,switchAutoTime){
+	if(switchAutoTime){
+		$('#autoTime').combobox('setValue',autoTime);	
 		$('#autoTime').combobox('disable');
+		$('#autoButton').switchbutton({
+			checked:switchAutoTime
+		});
 		$('#normalPush').linkbutton({
 			disabled:true
 		});
 		$('#mutiplePush').linkbutton({
 			disabled:true
-		});				
+		});						
 		
-		$('#push').datagrid('loading');
-		$.messager.alert('提示','自动推送中，时间间隔为：'+text+'。<p>如需取消自动推送，请按确定按钮。</p>','info',function(r){
-			
-			$('#push').datagrid('loaded');
-			clearInterval(timeClockProcess);
-			$('#autoTime').combobox('enable');	
-			$('#normalPush').linkbutton({
-				disabled:false
-			});
-			$('#mutiplePush').linkbutton({
-				disabled:false
-			});
-			$('#autoButton').switchbutton({
-				checked:false
-			});
-			
-		});
+	}else{
+		$('#autoTime').combobox('setValue',autoTime);
 	}
 }
+
+function cancelAutoPushStatus(){
+	var text = $('#autoTime').combobox('getText');
+	$.messager.confirm('提示','自动推送中，时间间隔为：'+text+'。<p>如需取消自动推送，请按确定按钮。</p>',function(r){		
+		if(r){
+			$.post("showAction_setAutoPushState.action", 
+					{'remoteSwitchAutoTime':'false'},
+					function(result){					
+						if(result.status){
+			        		$.messager.alert('成功','取消自动推动成功！','info');	
+			        		$('#autoTime').combobox('enable');	
+			    			$('#normalPush').linkbutton({
+			    				disabled:false
+			    			});
+			    			$('#mutiplePush').linkbutton({
+			    				disabled:false
+			    			});
+			    			$('#autoButton').switchbutton({
+			    				checked:false
+			    			});
+			        	}else{
+			        		$.messager.alert('失败','取消自动推动失败！','error');
+			        		$('#push').datagrid('reload');
+			        	}
+				}, "json");
+		}else{
+			$('#autoButton').switchbutton({
+				checked:true
+			});
+		}
+	});
+}
+
+function sendAutoPushStatus(){
+	var time = $('#autoTime').combobox('getValue');
+	
+	if(time>0&&time<=1440){
+		$.post("showAction_setAutoPushState.action", 
+			{'remoteSwitchAutoTime':'true',
+			 'remoteAutoTime':time},
+			function(result){
+				if(result.status){
+	    			setAutoPushStatus(time,true);
+	        	}else{
+	        		$.messager.alert('失败','取消自动推动失败！','error');
+	        		$('#push').datagrid('reload');
+	        }
+		}, "json");
+	}else{
+		$.messager.alert('失败','请检查数据参数是否正确！','error');
+	}
+		
+}
+
 
 function pushPass(){
 	var row = $('#push').datagrid('getSelected');	
