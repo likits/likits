@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-
 import com.likits.entity.front.Article;
 import com.likits.service.admin.ShowService;
 import com.likits.util.BaseAction;
@@ -19,6 +18,16 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
 {
 
     private static final long serialVersionUID = 1L;
+
+    // 自动推送时间,单位分钟
+    private static int autoTime = 60;
+    // 自动推送开关
+    private static boolean switchAutoTime = false;
+    
+    private int remoteAutoTime;
+    
+    private boolean remoteSwitchAutoTime;
+
     Article article;
 
     @Resource
@@ -26,7 +35,7 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
 
     private int page;
     private int rows;
-    
+
     private static JSONObject successMsg;
     private static JSONObject errorMsg;
 
@@ -38,20 +47,63 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
         errorMsg.put("status", false);
     }
 
-    public void findAllArticles()
-    {        
+    public void switchAutoPush()
+    {
+        if (remoteSwitchAutoTime)
+        {
+            switchAutoTime = true;
+            // set up auto time
+        }else if(!remoteSwitchAutoTime){
+            switchAutoTime = false;
+            //shut down auto time
+        }
+    }
+
+    public static void autoPush()
+    {
+
+    }
+    
+    public void getAutoPushState(){
+        JSONObject jo = new JSONObject();
+        jo.put("autoTime", autoTime);
+        jo.put("switchAutoTime", switchAutoTime);
+        this.toResponse(jo.toString());
+    }
+    
+    public void setAutoPushState(){
         try
         {
-            String json = showService.findAllShows(page, rows,article.getStateId());
-            this.toResponse(json);            
+            if (remoteSwitchAutoTime)
+            {
+                switchAutoTime = true;
+                autoTime = remoteAutoTime;
+            }else{
+                switchAutoTime = false;
+            }
+            this.toResponse(successMsg.toString());
         } catch (Exception e)
         {
             this.toResponse(errorMsg.toString());
-            e.printStackTrace();            
+            e.printStackTrace();
         }
     }
-    
-    public void update(){
+
+    public void findAllArticles()
+    {
+        try
+        {
+            String json = showService.findAllShows(page, rows, article.getStateId());
+            this.toResponse(json);
+        } catch (Exception e)
+        {
+            this.toResponse(errorMsg.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public void update()
+    {
         try
         {
             showService.update(article);
@@ -60,7 +112,47 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
         {
             this.toResponse(errorMsg.toString());
             e.printStackTrace();
-        }        
+        }
+    }
+
+    public int getRemoteAutoTime()
+    {
+        return remoteAutoTime;
+    }
+
+    public void setRemoteAutoTime(int remoteAutoTime)
+    {
+        this.remoteAutoTime = remoteAutoTime;
+    }
+
+    public boolean isRemoteSwitchAutoTime()
+    {
+        return remoteSwitchAutoTime;
+    }
+
+    public void setRemoteSwitchAutoTime(boolean remoteSwitchAutoTime)
+    {
+        this.remoteSwitchAutoTime = remoteSwitchAutoTime;
+    }
+
+    public static int getAutoTime()
+    {
+        return autoTime;
+    }
+
+    public static void setAutoTime(int autoTime)
+    {
+        ShowAction.autoTime = autoTime;
+    }
+
+    public static boolean isSwitchAutoTime()
+    {
+        return switchAutoTime;
+    }
+
+    public static void setSwitchAutoTime(boolean switchAutoTime)
+    {
+        ShowAction.switchAutoTime = switchAutoTime;
     }
 
     public int getPage()

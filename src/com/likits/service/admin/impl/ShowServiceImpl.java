@@ -38,7 +38,15 @@ public class ShowServiceImpl implements ShowService
             jo.put("title", article.getTitle());
             jo.put("publishTime", simpleDateFormat.format(article.getPublishTime()));
             jo.put("content", article.getContent());
+            jo.put("readCounter", article.getReadCounter());
+            jo.put("starCounter", article.getStarCounter());
+            jo.put("forwardCounter", article.getForwardCounter());
+            jo.put("userId", article.getUserId());
+            jo.put("tagId", article.getTagId());            
             jo.put("coverImage", article.getCoverImage());
+            jo.put("categoryId", article.getCategoryId());
+            jo.put("infoOrArticleTagsId", article.getInfoOrArticleTagsId());
+            jo.put("infoOrArticleSubTagsId", article.getInfoOrArticleSubTagsId());
             jo.put("stateId", article.getStateId());
             ja.add(jo);
         }

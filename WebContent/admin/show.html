@@ -10,12 +10,11 @@
 
 </head>
 <body>
-<div class="easyui-tabs" data-options="border:false">
+<div id="menu-tabs" class="easyui-tabs" data-options="border:false">
 
     <div title="待审核">
 
         <table id="check" class="easyui-datagrid" style="width: 100%; height: 700px ;"
-               url="showAction_findAllArticles.action?stateId=1"
                toolbar="#check-toolbar" pagination="true"
                rownumbers="true" fitColumns="true" singleSelect="false">
             <thead>
@@ -28,12 +27,12 @@
                 <th field="readCounter" width="2">阅读数</th>
                 <th field="starCounter" width="2">点赞数</th>
                 <th field="forwardCounter" width="2">转发数</th>
-                <th field="user" width="2">发布者</th>
-                <th field="tag" width="2">标签</th>
+                <th field="userId" width="2">发布者</th>
+                <th field="tagId" width="2">标签</th>
                 <th field="coverImage" width="2">封面图片</th>
-                <th field="category" width="2">发布内容类型</th>
-                <th field="infoOrArticleTags" width="2">资讯类型</th>
-                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="categoryId" width="2">发布内容类型</th>
+                <th field="infoOrArticleTagsId" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTagsId" width="2">资讯子类型</th>
                 <th field="stateId" width="2">文章状态</th>
             </tr>
             </thead>
@@ -121,13 +120,13 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>发布者：</label>
-                                <input name="user" class="easyui-textbox" editable="false">
+                                <input name="userId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>标签：</label>
-                                <input name="tag" class="easyui-textbox" editable="false">
+                                <input name="tagId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -142,19 +141,19 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>内容类型：</label>
-                                <input name="category" class="easyui-textbox" editable="false">
+                                <input name="categoryId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯类型：</label>
-                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯子类型：</label>
-                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleSubTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                     </div>
@@ -172,7 +171,6 @@
     <div title="待推送">
 
         <table id="push" class="easyui-datagrid" style="width: 100%; height: 700px ;"
-               url="showAction_findAllArticles.action?stateId=2"
                toolbar="#push-toolbar" pagination="true"
                rownumbers="true" fitColumns="true" singleSelect="false">
             <thead>
@@ -185,12 +183,12 @@
                 <th field="readCounter" width="2">阅读数</th>
                 <th field="starCounter" width="2">点赞数</th>
                 <th field="forwardCounter" width="2">转发数</th>
-                <th field="user" width="2">发布者</th>
-                <th field="tag" width="2">标签</th>
+                <th field="userId" width="2">发布者</th>
+                <th field="tagId" width="2">标签</th>
                 <th field="coverImage" width="2">封面图片</th>
-                <th field="category" width="2">发布内容类型</th>
-                <th field="infoOrArticleTags" width="2">资讯类型</th>
-                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="categoryId" width="2">发布内容类型</th>
+                <th field="infoOrArticleTagsId" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTagsId" width="2">资讯子类型</th>
                 <th field="stateId" width="2">文章状态</th>
             </tr>
             </thead>
@@ -290,13 +288,13 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>发布者：</label>
-                                <input name="user" class="easyui-textbox" editable="false">
+                                <input name="userId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>标签：</label>
-                                <input name="tag" class="easyui-textbox" editable="false">
+                                <input name="tagId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -311,19 +309,19 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>内容类型：</label>
-                                <input name="category" class="easyui-textbox" editable="false">
+                                <input name="categoryId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯类型：</label>
-                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯子类型：</label>
-                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleSubTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                     </div>
@@ -340,7 +338,6 @@
 
     <div title="已推送">
         <table id="publish" class="easyui-datagrid" style="width: 100%; height: 700px ;"
-               url="showAction_findAllArticles.action?stateId=3"
                toolbar="#publish-toolbar" pagination="true"
                rownumbers="true" fitColumns="true" singleSelect="false">
             <thead>
@@ -353,12 +350,12 @@
                 <th field="readCounter" width="2">阅读数</th>
                 <th field="starCounter" width="2">点赞数</th>
                 <th field="forwardCounter" width="2">转发数</th>
-                <th field="user" width="2">发布者</th>
-                <th field="tag" width="2">标签</th>
+                <th field="userId" width="2">发布者</th>
+                <th field="tagId" width="2">标签</th>
                 <th field="coverImage" width="2">封面图片</th>
-                <th field="category" width="2">发布内容类型</th>
-                <th field="infoOrArticleTags" width="2">资讯类型</th>
-                <th field="infoOrArticleSubTags" width="2">资讯子类型</th>
+                <th field="categoryId" width="2">发布内容类型</th>
+                <th field="infoOrArticleTagsId" width="2">资讯类型</th>
+                <th field="infoOrArticleSubTagsId" width="2">资讯子类型</th>
                 <th field="stateId" width="2">文章状态</th>
             </tr>
             </thead>
@@ -446,13 +443,13 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>发布者：</label>
-                                <input name="user" class="easyui-textbox" editable="false">
+                                <input name="userId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>标签：</label>
-                                <input name="tag" class="easyui-textbox" editable="false">
+                                <input name="tagId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -467,19 +464,19 @@
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>内容类型：</label>
-                                <input name="category" class="easyui-textbox" editable="false">
+                                <input name="categoryId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯类型：</label>
-                                <input name="infoOrArticleTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fitem">
                                 <label>资讯子类型：</label>
-                                <input name="infoOrArticleSubTags" class="easyui-textbox" editable="false">
+                                <input name="infoOrArticleSubTagsId" class="easyui-textbox" editable="false">
                             </div>
                         </div>
                     </div>
