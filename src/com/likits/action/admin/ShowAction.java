@@ -22,7 +22,7 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
     // 自动推送时间,单位分钟
     private static int autoTime = 60;
     // 自动推送开关
-    private static boolean switchAutoTime = true;
+    private static boolean switchAutoTime = false;
     
     private int remoteAutoTime;
     

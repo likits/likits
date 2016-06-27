@@ -15,8 +15,15 @@ $(document).ready(function(){
 	
 	$('#menu-tabs').tabs({
 	    onSelect:function(title,index){
-	    	if(index == 1){
+	    	if(index == 0){
+	    		$('#check').datagrid('load','showAction_findAllArticles.action?stateId=1');
+	    	}
+	    	else if(index == 1){
 	    		getAutoPushStatus();
+	    		$('#push').datagrid('load','showAction_findAllArticles.action?stateId=2');
+	    	}
+	    	else if(index == 2){
+	    		$('#publish').datagrid('load','showAction_findAllArticles.action?stateId=3');
 	    	}
 	    }
 	});
@@ -25,14 +32,14 @@ $(document).ready(function(){
 
 //通用类
 //提交表单，确认数据时候更新成功
-function submitForm(formId,url){
+function submitForm(formId,url,dgId){
 	$(formId).form('submit', {
         url: url,
         success:function(data){
         	var result = $.parseJSON(data);
         	if(result.status){
         		$.messager.alert('成功','数据更新成功！','info');
-        		$('#check').datagrid('reload');
+        		$(dgId).datagrid('reload');
         	}else{
         		$.messager.alert('失败','数据更新失败！','error');
         	}
@@ -56,20 +63,23 @@ function multipleCheck(){
     var rows = $('#check').datagrid('getSelections');
     var dataSize = rows.length;
     if (dataSize>0){
-    	$.messager.confirm('批量审核','确认批量审核文章 ：'+dataSize,function(r){
+    	$.messager.confirm('批量审核','确认批量审核文章？<p>选中文章数量：'+dataSize+'</p>',function(r){
     	    if (r){
+    	    	var status;
     	    	for(var i = 0; i<rows.length ; i++){
-    	        	var title = rows[i].title;
+    	        	rows[i].stateId = 2;
     	        	$.post(check_url, rows[i],
     	        			  function(result){
-    			        		if(result.status){
-    				        		$.messager.alert('成功','数据更新成功！'+title,'info');			        		
-    				        	}else{
-    				        		$.messager.alert('失败','数据更新失败！'+title,'error');
-    				        	}
+    			        		status = result.status;
+		    	        		if(status){
+		    		        		$.messager.alert('成功','数据更新成功！','info');			        		
+		    		        	}else{
+		    		        		$.messager.alert('失败','数据更新失败！','error');
+		    		        	}
+		    	    	    	$('#check').datagrid('reload');
     	        			 }, "json");
-    	        }
-    	    	$('#check').datagrid('reload');
+    	        	
+    	        }    	    	
     	    }
     	});    
     }else{
@@ -88,7 +98,7 @@ function checkPass(){
 				if (status_value == 1) {
 					$.messager.alert('警告','文章状态没有改变。','warning');
 				}else{									
-					submitForm('#check-form',check_url);
+					submitForm('#check-form',check_url,'#check');
 					$('#check-dlg').dialog('close');
 				}								
 			}			
@@ -116,20 +126,22 @@ function mutiplePush(){
 	var rows = $('#push').datagrid('getSelections');
     var dataSize = rows.length;
     if (dataSize>0){
-    	$.messager.confirm('批量推送','确认批量推送文章 ：'+dataSize,function(r){
+    	$.messager.confirm('批量推送','确认批量推送文章 ：<p>选中文章数量：'+dataSize+'</p>',function(r){
     	    if (r){
+    	    	var status;
     	    	for(var i = 0; i<rows.length ; i++){
-    	        	var title = rows[i].title;
+    	    		rows[i].stateId = 3;
     	        	$.post(push_url, rows[i],
     	        			  function(result){
-    			        		if(result.status){
-    				        		$.messager.alert('成功','数据更新成功！'+title,'info');			        		
-    				        	}else{
-    				        		$.messager.alert('失败','数据更新失败！'+title,'error');
-    				        	}
+		    	        		status = result.status;
+		    	        		if(status){
+		    		        		$.messager.alert('成功','数据更新成功！','info');			        		
+		    		        	}else{
+		    		        		$.messager.alert('失败','数据更新失败！','error');
+		    		        	}
+		    	        		$('#push').datagrid('reload');
     	        			 }, "json");
     	        }
-    	    	$('#push').datagrid('reload');
     	    }
     	});    
     }else{
@@ -229,8 +241,8 @@ function pushPass(){
 				if (status_value == 2) {
 					$.messager.alert('警告','文章状态没有改变。','warning');
 				}else{
-					submitForm('#push-form',push_url);		
-					$('#check-dlg').dialog('close');
+					submitForm('#push-form',push_url,'#push');						
+					$('#push-dlg').dialog('close');
 				}								
 			}			
 			
@@ -254,20 +266,22 @@ function publishMultiDown(){
 	var rows = $('#publish').datagrid('getSelections');
     var dataSize = rows.length;
     if (dataSize>0){
-    	$.messager.confirm('批量推送','确认批量推送文章 ：'+dataSize,function(r){
+    	$.messager.confirm('批量下架','确认批量下架文章 ？<p>选中文章数量：'+dataSize+'</p>',function(r){
     	    if (r){
+    	    	var status;
     	    	for(var i = 0; i<rows.length ; i++){
-    	        	var title = rows[i].title;
+    	    		rows[i].stateId = 4;
     	        	$.post(publish_url, rows[i],
     	        			  function(result){
-    			        		if(result.status){
-    				        		$.messager.alert('成功','数据更新成功！'+title,'info');			        		
+    	        				status = result.status;
+    			        		if(status){
+    				        		$.messager.alert('成功','数据更新成功！','info');			        		
     				        	}else{
-    				        		$.messager.alert('失败','数据更新失败！'+title,'error');
+    				        		$.messager.alert('失败','数据更新失败！','error');
     				        	}
+    			        		$('#publish').datagrid('reload');
     	        			 }, "json");
-    	        }
-    	    	$('#publish').datagrid('reload');
+    	        }    	    	
     	    }
     	});    
     }else{
@@ -286,7 +300,7 @@ function publishPass(){
 				if (status_value == 3) {
 					$.messager.alert('警告','文章状态没有改变。','warning');
 				}else{
-					submitForm('#push-form',push_url);		
+					submitForm('#publish-form',publish_url,'#publish');		
 					$('#publish-dlg').dialog('close');
 				}								
 			}			
