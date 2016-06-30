@@ -1,5 +1,10 @@
 package com.likits.action.admin;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Scope;
@@ -23,6 +28,8 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
     private static int autoTime = 60;
     // 自动推送开关
     private static boolean switchAutoTime = false;
+    //自动定时器
+    private static Timer timer;
     
     private int remoteAutoTime;
     
@@ -32,7 +39,7 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
 
     @Resource
     private ShowService showService;
-
+    
     private int page;
     private int rows;
 
@@ -44,31 +51,65 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
         successMsg = new JSONObject();
         successMsg.put("status", true);
         errorMsg = new JSONObject();
-        errorMsg.put("status", false);
+        errorMsg.put("status", false);                
     }
 
     public void switchAutoPush()
     {
-        if (remoteSwitchAutoTime)
+        try
         {
-            switchAutoTime = true;
-            // set up auto time
-        }else if(!remoteSwitchAutoTime){
-            switchAutoTime = false;
-            //shut down auto time
+            if (switchAutoTime)
+            {
+                timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask()
+                {            
+                    public void run()
+                    {
+                        autoPush();                
+                    }
+                },new Date(), autoTime*1000*60);
+            }else {
+                timer.cancel();
+                timer.purge();
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
+        
     }
 
-    public static void autoPush()
-    {
-
+    public void autoPush()
+    {        
+        try
+        {
+            String hql = "from Article as a where a.stateId=2";
+            List<Article> articles = showService.findBylimitNumber(hql, 1);
+            if ((articles != null) && (articles.size() != 0))
+            {
+                Article article = articles.get(0);
+                article.setStateId(3);
+                showService.update(article);
+                System.out.println("自动推送中："+article.getTitle());
+                System.out.println("推送周期："+autoTime+"分钟");
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }        
     }
     
     public void getAutoPushState(){
-        JSONObject jo = new JSONObject();
-        jo.put("autoTime", autoTime);
-        jo.put("switchAutoTime", switchAutoTime);
-        this.toResponse(jo.toString());
+        try
+        {
+            JSONObject jo = new JSONObject();
+            jo.put("autoTime", autoTime);
+            jo.put("switchAutoTime", switchAutoTime);
+            this.toResponse(jo.toString());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     
     public void setAutoPushState(){
@@ -81,6 +122,10 @@ public class ShowAction extends BaseAction implements ModelDriven<Article>
             }else{
                 switchAutoTime = false;
             }
+            
+            //begin or cancel the auto time.
+            switchAutoPush();
+            
             this.toResponse(successMsg.toString());
         } catch (Exception e)
         {
