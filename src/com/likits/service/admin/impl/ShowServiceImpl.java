@@ -59,4 +59,9 @@ public class ShowServiceImpl implements ShowService
     {
         showDao.update(article);        
     }
+    
+    public List<Article> findBylimitNumber(String queryString, int limit)
+    {        
+        return showDao.findBylimitNumber(queryString, limit);
+    }
 }

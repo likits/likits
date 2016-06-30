@@ -27,4 +27,15 @@ public class ShowDaoImpl extends BaseDao<Article, Integer> implements ShowDao
         return articles;
     }
 
+    public List<Article> findBylimitNumber(String queryString, int limit)
+    {
+        Session session = this.getSessionFactory().getCurrentSession();        
+        Query query = session.createQuery(queryString);
+        query.setMaxResults(limit);
+        @SuppressWarnings("unchecked")
+        List<Article> articles = query.list();
+        return articles;
+    }    
+    
+
 }
